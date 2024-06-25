@@ -38,12 +38,12 @@
             },
             promptTemplate: "Act as a {role}, Your task is {task}, Take into account this: {context}, Output: {format}"
         };
-    </script>
+     </script>
     <style>
         :root {
             --primary-color: #333;
             --secondary-color: #666;
-            --background-color: #fff;
+            --background-color: #E8FDFD;
             --border-color: #ccc;
             --button-color: #4CAF50;
             --button-text-color: #fff;
@@ -89,6 +89,7 @@
             margin-left: 5px;
             cursor: help;
             position: relative;
+            display: inline-block;
         }
 
         .question-mark::after {
@@ -109,14 +110,13 @@
             width: 200px;
             background-color: var(--secondary-color);
             color: var(--background-color);
-            text-align: center;
+            text-align: left;
             border-radius: 6px;
             padding: 5px;
             position: absolute;
             z-index: 1;
             bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
+            left: -10px;
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -124,6 +124,15 @@
         .question-mark:hover .tooltip {
             visibility: visible;
             opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .tooltip {
+                width: auto;
+                max-width: 200px;
+                left: auto;
+                right: 0;
+            }
         }
 
         textarea {
@@ -231,14 +240,14 @@
             let isValid = true;
 
             if (!role.value.trim()) {
-                document.getElementById('roleError').textContent = 'This field is mandatory';
+                document.getElementById('roleError').textContent = 'Povinné pole';
                 isValid = false;
             } else {
                 document.getElementById('roleError').textContent = '';
             }
 
             if (!task.value.trim()) {
-                document.getElementById('taskError').textContent = 'This field is mandatory';
+                document.getElementById('taskError').textContent = 'Povinné pole';
                 isValid = false;
             } else {
                 document.getElementById('taskError').textContent = '';

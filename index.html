@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Builder</title>
+    <style>
+        :root {
+            /* Customizable variables */
+            --primary-color: #333;
+            --secondary-color: #666;
+            --background-color: #fff;
+            --border-color: #ccc;
+            --button-color: #4CAF50;
+            --button-text-color: #fff;
+            --hover-color: #45a049;
+            --error-color: #ff0000;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .required::after {
+            content: "*";
+            color: var(--error-color);
+            margin-left: 5px;
+        }
+
+        .question-mark {
+            margin-left: 5px;
+            cursor: help;
+            position: relative;
+        }
+
+        .question-mark::after {
+            content: "?";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: var(--background-color);
+            text-align: center;
+            font-size: 12px;
+            line-height: 16px;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--secondary-color);
+            color: var(--background-color);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .question-mark:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--button-color);
+            color: var(--button-text-color);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+        }
+
+        #generateButton {
+            margin-bottom: 20px;
+        }
+
+        #copyButton {
+            background-color: var(--secondary-color);
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        #copyButton:hover {
+            background-color: #555;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prompt Builder</h1>
+        <div class="input-group">
+            <label for="role" class="required">Role <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
+            <textarea id="role" rows="3" placeholder="Placeholder 1"></textarea>
+            <div id="roleError" class="error-message"></div>
+        </div>
+        <div class="input-group">
+            <label for="task" class="required">Task <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
+            <textarea id="task" rows="3" placeholder="Placeholder 2"></textarea>
+            <div id="taskError" class="error-message"></div>
+        </div>
+        <div class="input-group">
+            <label for="context">Context / additional information / company info <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
+            <textarea id="context" rows="3" placeholder="Placeholder 3"></textarea>
+        </div>
+        <div class="input-group">
+            <label for="format">Specify the result format <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
+            <textarea id="format" rows="3" placeholder="Placeholder 4"></textarea>
+        </div>
+        <button id="generateButton">Generate prompt</button>
+        <div class="input-group">
+            <label for="mergedPrompt">Merged prompt <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
+            <textarea id="mergedPrompt" rows="6" readonly></textarea>
+        </div>
+        <button id="copyButton">📋 Copy</button>
+    </div>
+
+    <script>
+        // Customizable variables
+        const promptTemplate = "Act as a {role}, Your task is {task}, Take into account this information: {context}, Desired output: {format}";
+
+        document.getElementById('generateButton').addEventListener('click', generatePrompt);
+        document.getElementById('copyButton').addEventListener('click', copyMergedPrompt);
+
+        function generatePrompt() {
+            const role = document.getElementById('role');
+            const task = document.getElementById('task');
+            const context = document.getElementById('context');
+            const format = document.getElementById('format');
+
+            let isValid = true;
+
+            if (!role.value.trim()) {
+                document.getElementById('roleError').textContent = 'This field is mandatory';
+                isValid = false;
+            } else {
+                document.getElementById('roleError').textContent = '';
+            }
+
+            if (!task.value.trim()) {
+                document.getElementById('taskError').textContent = 'This field is mandatory';
+                isValid = false;
+            } else {
+                document.getElementById('taskError').textContent = '';
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            const mergedPrompt = promptTemplate
+                .replace('{role}', role.value)
+                .replace('{task}', task.value)
+                .replace('{context}', context.value)
+                .replace('{format}', format.value);
+
+            document.getElementById('mergedPrompt').value = mergedPrompt;
+        }
+
+        function copyMergedPrompt() {
+            const mergedPrompt = document.getElementById('mergedPrompt');
+            mergedPrompt.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

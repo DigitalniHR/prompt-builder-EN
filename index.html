@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompt Builder</title>
+    <script>
+        // Customizable variables
+        const CONFIG = {
+            mainTitle: "Prompt Builder",
+            role: {
+                label: "Role",
+                placeholder: "Placeholder 1",
+                helpText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            },
+            task: {
+                label: "Task",
+                placeholder: "Placeholder 2",
+                helpText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            },
+            context: {
+                label: "Context / additional information / company info",
+                placeholder: "Placeholder 3",
+                helpText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            },
+            format: {
+                label: "Specify the result format",
+                placeholder: "Placeholder 4",
+                helpText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            },
+            mergedPrompt: {
+                label: "Merged prompt",
+                helpText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            },
+            buttons: {
+                generate: "Generate prompt",
+                copy: "📋 Copy"
+            },
+            promptTemplate: "Act as a {role}, Your task is {task}, Take into account this information: {context}, Desired output: {format}"
+        };
+    </script>
     <style>
         :root {
-            /* Customizable variables */
             --primary-color: #333;
             --secondary-color: #666;
             --background-color: #fff;
@@ -138,36 +172,52 @@
 </head>
 <body>
     <div class="container">
-        <h1>Prompt Builder</h1>
+        <h1 id="mainTitle"></h1>
         <div class="input-group">
-            <label for="role" class="required">Role <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
-            <textarea id="role" rows="3" placeholder="Placeholder 1"></textarea>
+            <label for="role" class="required"><span id="roleLabel"></span> <span class="question-mark"><span class="tooltip" id="roleHelpText"></span></span></label>
+            <textarea id="role" rows="3"></textarea>
             <div id="roleError" class="error-message"></div>
         </div>
         <div class="input-group">
-            <label for="task" class="required">Task <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
-            <textarea id="task" rows="3" placeholder="Placeholder 2"></textarea>
+            <label for="task" class="required"><span id="taskLabel"></span> <span class="question-mark"><span class="tooltip" id="taskHelpText"></span></span></label>
+            <textarea id="task" rows="3"></textarea>
             <div id="taskError" class="error-message"></div>
         </div>
         <div class="input-group">
-            <label for="context">Context / additional information / company info <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
-            <textarea id="context" rows="3" placeholder="Placeholder 3"></textarea>
+            <label for="context"><span id="contextLabel"></span> <span class="question-mark"><span class="tooltip" id="contextHelpText"></span></span></label>
+            <textarea id="context" rows="3"></textarea>
         </div>
         <div class="input-group">
-            <label for="format">Specify the result format <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
-            <textarea id="format" rows="3" placeholder="Placeholder 4"></textarea>
+            <label for="format"><span id="formatLabel"></span> <span class="question-mark"><span class="tooltip" id="formatHelpText"></span></span></label>
+            <textarea id="format" rows="3"></textarea>
         </div>
-        <button id="generateButton">Generate prompt</button>
+        <button id="generateButton"></button>
         <div class="input-group">
-            <label for="mergedPrompt">Merged prompt <span class="question-mark"><span class="tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></label>
+            <label for="mergedPrompt"><span id="mergedPromptLabel"></span> <span class="question-mark"><span class="tooltip" id="mergedPromptHelpText"></span></span></label>
             <textarea id="mergedPrompt" rows="6" readonly></textarea>
         </div>
-        <button id="copyButton">📋 Copy</button>
+        <button id="copyButton"></button>
     </div>
 
     <script>
-        // Customizable variables
-        const promptTemplate = "Act as a {role}, Your task is {task}, Take into account this information: {context}, Desired output: {format}";
+        // Populate the HTML with the config values
+        document.getElementById('mainTitle').textContent = CONFIG.mainTitle;
+        document.getElementById('roleLabel').textContent = CONFIG.role.label;
+        document.getElementById('roleHelpText').textContent = CONFIG.role.helpText;
+        document.getElementById('role').placeholder = CONFIG.role.placeholder;
+        document.getElementById('taskLabel').textContent = CONFIG.task.label;
+        document.getElementById('taskHelpText').textContent = CONFIG.task.helpText;
+        document.getElementById('task').placeholder = CONFIG.task.placeholder;
+        document.getElementById('contextLabel').textContent = CONFIG.context.label;
+        document.getElementById('contextHelpText').textContent = CONFIG.context.helpText;
+        document.getElementById('context').placeholder = CONFIG.context.placeholder;
+        document.getElementById('formatLabel').textContent = CONFIG.format.label;
+        document.getElementById('formatHelpText').textContent = CONFIG.format.helpText;
+        document.getElementById('format').placeholder = CONFIG.format.placeholder;
+        document.getElementById('mergedPromptLabel').textContent = CONFIG.mergedPrompt.label;
+        document.getElementById('mergedPromptHelpText').textContent = CONFIG.mergedPrompt.helpText;
+        document.getElementById('generateButton').textContent = CONFIG.buttons.generate;
+        document.getElementById('copyButton').textContent = CONFIG.buttons.copy;
 
         document.getElementById('generateButton').addEventListener('click', generatePrompt);
         document.getElementById('copyButton').addEventListener('click', copyMergedPrompt);
@@ -198,7 +248,7 @@
                 return;
             }
 
-            const mergedPrompt = promptTemplate
+            const mergedPrompt = CONFIG.promptTemplate
                 .replace('{role}', role.value)
                 .replace('{task}', task.value)
                 .replace('{context}', context.value)
